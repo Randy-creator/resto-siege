@@ -1,9 +1,10 @@
 openapi: "3.0.2"
 info:
-  title: API Title
+  title: Restaurant management API
+  description: Documentation of the functionalities and endpoints that will be implemented on the restaurant management
   version: "1.0"
 servers:
-  - url: https://api.server.test/v1
+  - url: http://localhost:8080
 
 tags:
   - name: Ingredient
