@@ -4,7 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+
+import static org.restaurantmanagement.resto.entity.StockMovementType.IN;
+import static org.restaurantmanagement.resto.entity.StockMovementType.OUT;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,4 +40,44 @@ public class Ingredient {
         return getPrices();
     }
 
+    public Double getPriceAt(LocalDateTime dateTime) {
+        return findPriceAt(dateTime).orElse(new Price(0.0)).getAmount();
+    }
+
+    private Optional<Price> findActualPrice() {
+        return prices.stream().max(Comparator.comparing(Price::getDateTime));
+    }
+
+    private Optional<Price> findPriceAt(LocalDateTime dateValue) {
+        return prices.stream()
+                .filter(price -> price.getDateTime().isBefore(dateValue) || price.getDateTime().equals(dateValue))
+                .findFirst();
+    }
+
+    private Optional<Price> findPriceAt() {
+        return findPriceAt(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT));
+    }
+
+
+    public Double getAvailableQuantityAt() {
+        return getAvailableQuantityAt(LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT));
+    }
+
+
+    public Double getAvailableQuantityAt(LocalDateTime datetime) {
+        List<StockMovement> stockMovementsBeforeToday = stockMovements.stream()
+                .filter(stockMovement ->
+                        stockMovement.getCreationDateTime().isBefore(datetime)
+                                || stockMovement.getCreationDateTime().equals(datetime))
+                .toList();
+        double quantity = 0;
+        for (StockMovement stockMovement : stockMovementsBeforeToday) {
+            if (IN.equals(stockMovement.getStockMovementType())) {
+                quantity += stockMovement.getQuantity();
+            } else if (OUT.equals(stockMovement.getStockMovementType())) {
+                quantity -= stockMovement.getQuantity();
+            }
+        }
+        return quantity;
+    }
 }
