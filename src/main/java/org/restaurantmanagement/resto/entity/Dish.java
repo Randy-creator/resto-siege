@@ -12,7 +12,7 @@ import java.util.List;
 public class Dish {
     private Long id;
     private String name;
-    private List<Price> price;
+    private List<Price> prices;
     private List<Ingredient> ingredientList;
 
     public Dish(Long id, String name) {
@@ -21,7 +21,7 @@ public class Dish {
     }
 
     public Double getActualPrice() {
-        return price.stream().max(Comparator.comparing(Price::getDateTime))
+        return prices.stream().max(Comparator.comparing(Price::getDateTime))
                 .map(Price::getAmount)
                 .orElse(null);
     }
