@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Data
@@ -16,5 +18,11 @@ public class Dish {
     public Dish(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Double getActualPrice() {
+        return price.stream().max(Comparator.comparing(Price::getDateTime))
+                .map(Price::getAmount)
+                .orElse(null);
     }
 }
