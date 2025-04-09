@@ -12,17 +12,12 @@ import java.util.List;
 public class Dish {
     private Long id;
     private String name;
-    private List<Price> prices;
+    private Double price;
     private List<Ingredient> ingredientList;
 
-    public Dish(Long id, String name) {
+    public Dish(Long id, String name, Double price) {
         this.id = id;
         this.name = name;
-    }
-
-    public Double getActualPrice() {
-        return prices.stream().max(Comparator.comparing(Price::getDateTime))
-                .map(Price::getAmount)
-                .orElse(null);
+        this.price = price;
     }
 }
