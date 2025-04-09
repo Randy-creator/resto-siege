@@ -326,9 +326,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/StockMovement"
-        availableQuantity:
-          type: float
-        actualPrice:
+        quantity:
           type: float
       allOf:
         - $ref: "#/components/schemas/IngredientBasicProperty"
