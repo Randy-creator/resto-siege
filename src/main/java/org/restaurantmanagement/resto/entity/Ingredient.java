@@ -21,6 +21,7 @@ public class Ingredient {
     private Long id;
     private String name;
     private Double quantity;
+    private Unit unit;
     private List<Price> prices;
     private List<StockMovement> stockMovements;
 
