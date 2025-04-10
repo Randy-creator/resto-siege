@@ -8,4 +8,6 @@ public interface DishCrud {
     public List<Dish> getAllDish(int page, int pageSize);
 
     public Dish getDishById(Long id);
+
+    public Dish createDish(Dish dish);
 }

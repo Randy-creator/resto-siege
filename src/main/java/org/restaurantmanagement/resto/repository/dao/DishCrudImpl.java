@@ -37,12 +37,7 @@ public class DishCrudImpl implements DishCrud {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    ingredientList.add(new Ingredient(
-                            rs.getLong("ingredient_id"),
-                            rs.getString("ingredient_name"),
-                            rs.getDouble("quantity"),
-                            Unit.valueOf(rs.getString(("unit")))
-                    ));
+                    ingredientList.add(new Ingredient(rs.getLong("ingredient_id"), rs.getString("ingredient_name"), rs.getDouble("quantity"), Unit.valueOf(rs.getString(("unit")))));
                 }
             }
             return ingredientList;
@@ -64,19 +59,13 @@ public class DishCrudImpl implements DishCrud {
             ps.setInt(2, (page - 1) * pageSize);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    dishList.add(new Dish(
-                            rs.getLong("dish_id"),
-                            rs.getString("dish_name"),
-                            rs.getDouble("dish_price"),
-                            getIngredientOfDish(rs.getLong("dish_id"))
-                    ));
+                    dishList.add(new Dish(rs.getLong("dish_id"), rs.getString("dish_name"), rs.getDouble("dish_price"), getIngredientOfDish(rs.getLong("dish_id"))));
                 }
             }
 
             return dishList;
 
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -90,16 +79,32 @@ public class DishCrudImpl implements DishCrud {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new Dish(
-                            rs.getLong("dish_id"),
-                            rs.getString("dish_name"),
-                            rs.getDouble("dish_price")
-                    );
+                    return new Dish(rs.getLong("dish_id"), rs.getString("dish_name"), rs.getDouble("dish_price"));
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    @Override
+    public Dish createDish(Dish dish) {
+        String sql = """
+                INSERT INTO Dish (dish_id, dish_name, dish_price) VALUES (?, ?, ?)
+                ON CONFLICT(dish_id) DO UPDATE
+                                        SET dish_name=EXCLUDED.dish_name, dish_price=EXCLUDED.dish_price
+                """;
+        try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, dish.getId());
+            ps.setString(2, dish.getName());
+            ps.setDouble(3, dish.getPrice());
+
+            ps.executeUpdate();
+
+            return dish;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
