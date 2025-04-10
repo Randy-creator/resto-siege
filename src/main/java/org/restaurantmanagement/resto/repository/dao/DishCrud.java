@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DishCrud {
     public List<Dish> getAllDish(int page, int pageSize);
+
+    public Dish getDishById(Long id);
 }

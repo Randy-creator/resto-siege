@@ -20,4 +20,8 @@ public class DishService {
     public List<Dish> getAllDishes(int page, int size) {
         return dishDao.getAllDish(page, size);
     }
+
+    public Dish getDishById(Long id) {
+        return dishDao.getDishById(id);
+    }
 }

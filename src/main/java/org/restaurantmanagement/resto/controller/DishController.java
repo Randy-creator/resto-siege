@@ -24,4 +24,9 @@ public class DishController {
                                                    @RequestParam int size) {
         return ResponseEntity.ok(dishService.getAllDishes(page, size));
     }
+
+    @GetMapping("/dish")
+    public ResponseEntity<Dish> getDishById(@RequestParam Long id) {
+        return ResponseEntity.ok(dishService.getDishById(id));
+    }
 }

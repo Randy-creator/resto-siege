@@ -80,4 +80,26 @@ public class DishCrudImpl implements DishCrud {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public Dish getDishById(Long id) {
+        String sql = """
+                SELECT dish_id, dish_name, dish_price FROM Dish WHERE dish_id = ? 
+                """;
+        try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Dish(
+                            rs.getLong("dish_id"),
+                            rs.getString("dish_name"),
+                            rs.getDouble("dish_price")
+                    );
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
