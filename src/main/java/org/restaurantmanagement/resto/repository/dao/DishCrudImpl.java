@@ -26,7 +26,7 @@ public class DishCrudImpl implements DishCrud {
 
     private List<Ingredient> getIngredientOfDish(Long dishId) {
         String sql = """
-                SELECT i.ingredient_id, i.ingredient_name, i.quantity, i.unit
+                SELECT i.ingredient_id, i.ingredient_name, di.quantity, i.unit
                 FROM DishIngredient di JOIN Ingredient i ON di.ingredient_id=i.ingredient_id
                 JOIN Dish d ON di.dish_id=d.dish_id WHERE d.dish_id = ?
                 """;
