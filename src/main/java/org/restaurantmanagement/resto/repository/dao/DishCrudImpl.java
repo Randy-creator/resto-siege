@@ -107,4 +107,30 @@ public class DishCrudImpl implements DishCrud {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public List<Ingredient> save(Long id, List<Ingredient> ingredientListToSave) {
+        Dish dishToSave = getDishById(id);
+        for (Ingredient ingredient : dishToSave.getIngredientList()) {
+            String sql = """
+                    INSERT INTO DishIngredient (dish_id, ingredient_id, quantity)
+                    VALUES (?, ?, ?)
+                    ON CONFLICT DO UPDATE
+                    dish_id=EXCLUDED.dish_id,
+                    ingredient_id=EXCLUDED.ingredient_id,
+                    quantity=EXCLUDED.quantity 
+                    """;
+            try (Connection connection = db.getConnection();
+                 PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setLong(1, dishToSave.getId());
+                ps.setLong(2, ingredient.getId());
+                ps.setDouble(3, ingredient.getQuantity());
+
+                ps.executeUpdate();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return List.of();
+    }
 }
