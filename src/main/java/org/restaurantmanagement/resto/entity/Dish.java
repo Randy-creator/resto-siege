@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Dish {
     private Long id;
     private String name;
