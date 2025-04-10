@@ -25,6 +25,13 @@ public class Ingredient {
     private List<Price> prices;
     private List<StockMovement> stockMovements;
 
+    public Ingredient(Long id, String name, Double quantity, Unit unit) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.unit = unit;
+    }
+
     public List<StockMovement> addStockMovements(List<StockMovement> stockMovements) {
         if (getStockMovements() == null || getStockMovements().isEmpty()) {
             return stockMovements;
