@@ -47,8 +47,8 @@ public class IngredientCrudImpl implements IngredientCrud {
     private List<StockMovement> getStockMovementListOfIngredient(Long id) {
         String sql = """
                 SELECT s.stock_movement_id, s.quantity, s.unit, s.stockMovementType, s.creationDateTime
-                FROM StockMovement p JOIN 
-                Ingredient i ON p.ingredient_id = ? 
+                FROM StockMovement s JOIN 
+                Ingredient i ON s.ingredient_id = ? 
                 """;
         List<StockMovement> stockMovementList = new ArrayList<>();
         try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
