@@ -22,4 +22,12 @@ public class Dish {
         this.name = name;
         this.price = price;
     }
+
+    public Double getAvailableQuantity() {
+        return this.ingredientList
+                .stream()
+                .mapToDouble(ingredient -> (Math.round(ingredient.getAvailableQuantityAt() / ingredient.getQuantity())))
+                .min()
+                .orElse(0);
+    }
 }
