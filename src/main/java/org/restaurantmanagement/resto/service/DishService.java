@@ -1,6 +1,7 @@
 package org.restaurantmanagement.resto.service;
 
 import org.restaurantmanagement.resto.entity.Dish;
+import org.restaurantmanagement.resto.entity.Ingredient;
 import org.restaurantmanagement.resto.repository.dao.DishCrudImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +24,9 @@ public class DishService {
 
     public Dish getDishById(Long id) {
         return dishDao.getDishById(id);
+    }
+
+    public Dish saveDish(Long id, List<Ingredient> ingredientList) {
+        return dishDao.save(id, ingredientList);
     }
 }

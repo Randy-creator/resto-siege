@@ -109,7 +109,7 @@ public class DishCrudImpl implements DishCrud {
     }
 
     @Override
-    public List<Ingredient> save(Long id, List<Ingredient> ingredientListToSave) {
+    public Dish save(Long id, List<Ingredient> ingredientListToSave) {
         Dish dishToSave = getDishById(id);
         for (Ingredient ingredient : dishToSave.getIngredientList()) {
             String sql = """
@@ -131,6 +131,6 @@ public class DishCrudImpl implements DishCrud {
                 throw new RuntimeException(e);
             }
         }
-        return ingredientListToSave;
+        return dishToSave;
     }
 }

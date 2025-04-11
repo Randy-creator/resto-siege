@@ -12,5 +12,5 @@ public interface DishCrud {
 
     public Dish createDish(Dish dish);
 
-    public List<Ingredient> save(Long id, List<Ingredient> ingredientListToSave);
+    public Dish save(Long id, List<Ingredient> ingredientListToSave);
 }
