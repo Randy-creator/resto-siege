@@ -131,6 +131,6 @@ public class DishCrudImpl implements DishCrud {
                 throw new RuntimeException(e);
             }
         }
-        return List.of();
+        return ingredientListToSave;
     }
 }

@@ -12,5 +12,6 @@ public interface IngredientCrud {
     public Ingredient getIngredientById(Long id);
 
     public Ingredient createIngredient(Ingredient ingredient);
-//    public void save(Long id, List<StockMovement> stockMovementList, List<Price> priceList);
+
+    public void save(Long id, List<StockMovement> stockMovementList, List<Price> priceList);
 }

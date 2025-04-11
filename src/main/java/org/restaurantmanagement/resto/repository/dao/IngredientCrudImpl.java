@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -145,7 +146,7 @@ public class IngredientCrudImpl implements IngredientCrud {
             ps.setLong(1, ingredient.getId());
             ps.setString(2, ingredient.getName());
             ps.setString(3, ingredient.getUnit().name());
-            insertQuantityOfIngredient(ingredient.getQuantity());
+            insertQuantityOfIngredient(ingredient.getId(), ingredient.getQuantity());
 
             ps.executeUpdate();
         } catch (Exception e) {
@@ -154,17 +155,74 @@ public class IngredientCrudImpl implements IngredientCrud {
         return ingredient;
     }
 
-    private void insertQuantityOfIngredient(Double quantity) {
+
+    private void insertQuantityOfIngredient(Long ingredientId, Double quantity) {
         String sql = """
-                INSERT INTO DishIngredient(quantity) VALUES (?)
-                ON CONFLICT (quantity) DO UPDATE 
+                INSERT INTO DishIngredient(ingredient_id, quantity) VALUES (?, ?)
+                ON CONFLICT (ingredient_id) DO UPDATE 
                 SET quantity = EXCLUDED.quantity 
                 """;
 
         try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setDouble(1, quantity);
+            ps.setLong(1, ingredientId);
+            ps.setDouble(2, quantity);
+
+            ps.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void save(Long id, List<StockMovement> stockMovementList, List<Price> priceList) {
+        Ingredient ingredientToSave = getIngredientById(id);
+        ingredientToSave.setStockMovements(stockMovementList);
+        ingredientToSave.setPrices(priceList);
+
+        try (Connection connection = db.getConnection()) {
+            for (StockMovement stockMove : stockMovementList) {
+                String sql = """
+                        INSERT INTO StockMovement (stock_movement_id, ingredient_id, quantity, unit, stockMovementType, creationDateTime)
+                        VALUES(?, ?, ?, ?, ?, ?)
+                        ON CONFLICT (stock_movement_id) DO UPDATE
+                        SET ingredient_id=EXCLUDED.ingredient_id,
+                            quantity=EXCLUDED.quantity, unit=EXCLUDED.unit, 
+                            stockMovementType=EXCLUDED.stockMovementType, 
+                            creationDateTime=EXCLUDED.creationDateTime
+                        """;
+
+                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                    ps.setLong(1, stockMove.getId());
+                    ps.setLong(2, ingredientToSave.getId());
+                    ps.setDouble(3, stockMove.getQuantity());
+                    ps.setString(4, stockMove.getUnit().name());
+                    ps.setString(5, stockMove.getStockMovementType().name());
+                    ps.setTimestamp(6, Timestamp.valueOf(stockMove.getCreationDateTime()));
+                    ps.executeUpdate();
+                }
+            }
+
+            for (Price price : priceList) {
+                String sql = """
+                        INSERT INTO Price (price_id, ingredient_id, amount, dateTime)
+                        VALUES (?, ?, ?, ?)
+                        ON CONFLICT (price_id) DO UPDATE
+                        SET ingredient_id = EXCLUDED.ingredient_id,
+                            amount = EXCLUDED.amount,
+                            dateTime = EXCLUDED.dateTime
+                        """;
+
+                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                    ps.setLong(1, price.getId());
+                    ps.setLong(2, id);
+                    ps.setDouble(3, price.getAmount());
+                    ps.setTimestamp(4, Timestamp.valueOf(price.getDateTime()));
+                    ps.executeUpdate();
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
