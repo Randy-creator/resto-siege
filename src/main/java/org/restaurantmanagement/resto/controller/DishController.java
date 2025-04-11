@@ -23,12 +23,12 @@ public class DishController {
         return ResponseEntity.ok(dishService.getAllDishes(page, size));
     }
 
-    @GetMapping("/dish")
-    public ResponseEntity<Dish> getDishById(@RequestParam Long id) {
+    @GetMapping("/dish/{id}")
+    public ResponseEntity<Dish> getDishById(@PathVariable Long id) {
         return ResponseEntity.ok(dishService.getDishById(id));
     }
 
-    @PutMapping
+    @PutMapping("/dishes/{id}/ingredients")
     public ResponseEntity<Dish> saveDish(@PathVariable Long id, @RequestBody List<Ingredient> ingredientList) {
         return ResponseEntity.ok(dishService.saveDish(id, ingredientList));
     }
