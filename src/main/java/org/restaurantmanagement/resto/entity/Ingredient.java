@@ -14,7 +14,6 @@ import java.util.Optional;
 import static org.restaurantmanagement.resto.entity.StockMovementType.IN;
 import static org.restaurantmanagement.resto.entity.StockMovementType.OUT;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Ingredient {

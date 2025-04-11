@@ -22,8 +22,8 @@ public class IngredientCrudImpl implements IngredientCrud {
 
     private List<Price> getPriceListOfIngredient(Long id) {
         String sql = """
-                SELECT p.price_id, p.amount, p.dateTime FROM Price p JOIN 
-                Ingredient i ON p.ingredient_id = ? 
+                SELECT p.price_id, p.amount, p.dateTime FROM Price p 
+                             WHERE p.ingredient_id = ?  
                 """;
         List<Price> priceList = new ArrayList<>();
         try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -47,8 +47,8 @@ public class IngredientCrudImpl implements IngredientCrud {
     private List<StockMovement> getStockMovementListOfIngredient(Long id) {
         String sql = """
                 SELECT s.stock_movement_id, s.quantity, s.unit, s.stockMovementType, s.creationDateTime
-                FROM StockMovement s JOIN 
-                Ingredient i ON s.ingredient_id = ? 
+                FROM StockMovement s 
+                WHERE s.ingredient_id = ? 
                 """;
         List<StockMovement> stockMovementList = new ArrayList<>();
         try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -76,10 +76,14 @@ public class IngredientCrudImpl implements IngredientCrud {
         String sql = """
                 SELECT i.ingredient_id, i.ingredient_name, di.quantity, i.unit
                 FROM DishIngredient di JOIN Ingredient i ON di.ingredient_id=i.ingredient_id
+                LIMIT ? OFFSET ?
                 """;
 
         List<Ingredient> ingredientList = new ArrayList<>();
         try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, size);
+            ps.setInt(2, page * size);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     ingredientList.add(
@@ -98,5 +102,33 @@ public class IngredientCrudImpl implements IngredientCrud {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Ingredient getIngredientById(Long id) {
+        String sql = """
+                SELECT i.ingredient_id, i.ingredient_name, di.quantity, i.unit
+                FROM DishIngredient di JOIN Ingredient i ON di.ingredient_id=i.ingredient_id
+                WHERE i.ingredient_id = ?
+                """;
+        try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Ingredient(
+                            rs.getLong("ingredient_id"),
+                            rs.getString("ingredient_name"),
+                            rs.getDouble("quantity"),
+                            Unit.valueOf(rs.getString("unit")),
+                            getPriceListOfIngredient(rs.getLong("ingredient_id")),
+                            getStockMovementListOfIngredient(rs.getLong("ingredient_id"))
+                    );
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 }
