@@ -131,4 +131,40 @@ public class IngredientCrudImpl implements IngredientCrud {
         }
         return null;
     }
+
+    @Override
+    public Ingredient createIngredient(Ingredient ingredient) {
+        String sql = """
+                    INSERT INTO Ingredient (ingredient_id, ingredient_name, unit) VALUES(?, ?, ?)
+                    ON CONFLICT (ingredient_id) DO UPDATE
+                    SET ingredient_id=EXCLUDED.ingredient_id, 
+                    ingredient_name=EXCLUDED.ingredient_name,
+                    unit=EXCLUDED.unit
+                """;
+        try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, ingredient.getId());
+            ps.setString(2, ingredient.getName());
+            ps.setString(3, ingredient.getUnit().name());
+            insertQuantityOfIngredient(ingredient.getQuantity());
+
+            ps.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return ingredient;
+    }
+
+    private void insertQuantityOfIngredient(Double quantity) {
+        String sql = """
+                INSERT INTO DishIngredient(quantity) VALUES (?)
+                ON CONFLICT (quantity) DO UPDATE 
+                SET quantity = EXCLUDED.quantity 
+                """;
+
+        try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setDouble(1, quantity);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
