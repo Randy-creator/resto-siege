@@ -37,7 +37,7 @@ public class DishOrderCrupImpl implements DishOrderCrud {
 
 
     private long findOrderId(long orderDishId) {
-        String sql = "SELECT (order_dish_id, dish_id, order_id, ordered_dish_quantity) from order_dish where order_dish_id = ?";
+        String sql = "SELECT (order_dish_id, dish_id, order_id, ordered_dish_quantity) from DishOrder where order_dish_id = ?";
         long orderId = 0;
 
         try (Connection connection = datasource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -70,7 +70,7 @@ public class DishOrderCrupImpl implements DishOrderCrud {
     public void addDishOrder(DishOrder dishOrder, long orderId) {
         try (Connection connection = datasource.getConnection()) {
             String sql =
-                    "INSERT INTO order_dish (order_dish_id, dish_id, order_id, ordered_dish_quantity) VALUES (?, ?, ?, ?) ON CONFLICT DO NOTHING";
+                    "INSERT INTO DishOrder (order_dish_id, dish_id, order_id, ordered_dish_quantity) VALUES (?, ?, ?, ?) ON CONFLICT DO NOTHING";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setLong(1, dishOrder.getDishOrderId());
                 statement.setLong(2, dishOrder.getCommendedDish().getId());
@@ -91,7 +91,7 @@ public class DishOrderCrupImpl implements DishOrderCrud {
     @Override
     public List<DishOrder> getDishOrdersByOrderId(long orderId) {
         List<DishOrder> dishOrders = new ArrayList<>();
-        String sql = "SELECT order_dish_id, dish_id, order_id, ordered_dish_quantity FROM order_dish WHERE order_id = ?";
+        String sql = "SELECT order_dish_id, dish_id, order_id, ordered_dish_quantity FROM DishOrder WHERE order_id = ?";
 
         try (Connection connection = datasource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
