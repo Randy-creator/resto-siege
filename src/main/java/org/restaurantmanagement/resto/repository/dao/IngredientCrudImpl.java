@@ -174,7 +174,7 @@ public class IngredientCrudImpl implements IngredientCrud {
     }
 
     @Override
-    public void save(Long id, List<StockMovement> stockMovementList, List<Price> priceList) {
+    public Ingredient save(Long id, List<StockMovement> stockMovementList, List<Price> priceList) {
         Ingredient ingredientToSave = getIngredientById(id);
         ingredientToSave.setStockMovements(stockMovementList);
         ingredientToSave.setPrices(priceList);
@@ -223,6 +223,7 @@ public class IngredientCrudImpl implements IngredientCrud {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return ingredientToSave;
     }
 
 }

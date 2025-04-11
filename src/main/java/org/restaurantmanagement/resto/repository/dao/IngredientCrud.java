@@ -13,5 +13,5 @@ public interface IngredientCrud {
 
     public Ingredient createIngredient(Ingredient ingredient);
 
-    public void save(Long id, List<StockMovement> stockMovementList, List<Price> priceList);
+    public Ingredient save(Long id, List<StockMovement> stockMovementList, List<Price> priceList);
 }
