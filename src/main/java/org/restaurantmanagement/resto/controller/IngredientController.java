@@ -21,7 +21,7 @@ public class IngredientController {
     }
 
     @GetMapping("/ingredients")
-    public ResponseEntity<List<Ingredient>> getAll(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<Ingredient>> getAll(@RequestParam(defaultValue ="0") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(ingredientService.getAll(page, size));
     }
 

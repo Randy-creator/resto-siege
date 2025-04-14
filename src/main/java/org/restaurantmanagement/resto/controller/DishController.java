@@ -20,7 +20,7 @@ public class DishController {
     }
 
     @GetMapping("/dishes")
-    public ResponseEntity<List<DishMapper>> getAllDishes(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<DishMapper>> getAllDishes(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(dishService.getAllDishes(page, size));
     }
 
