@@ -2,6 +2,7 @@ package org.restaurantmanagement.resto.controller;
 
 import org.restaurantmanagement.resto.entity.Dish;
 import org.restaurantmanagement.resto.entity.Ingredient;
+import org.restaurantmanagement.resto.entity.mapper.DishMapper;
 import org.restaurantmanagement.resto.service.DishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class DishController {
     }
 
     @GetMapping("/dishes")
-    public ResponseEntity<List<Dish>> getAllDishes(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<DishMapper>> getAllDishes(@RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(dishService.getAllDishes(page, size));
     }
 
