@@ -30,4 +30,12 @@ public class IngredientService {
     public Ingredient save(Long id, List<StockMovement> stockMovementList, List<Price> priceList) {
         return ingredientDao.save(id, stockMovementList, priceList);
     }
+
+    public Ingredient savePrices(Long id, List<Price> priceList) {
+        return ingredientDao.savePrices(id, priceList);
+    }
+
+    public Ingredient saveStockMovement(Long id, List<StockMovement> stockMovementList) {
+        return ingredientDao.saveStockMovements(id, stockMovementList);
+    }
 }

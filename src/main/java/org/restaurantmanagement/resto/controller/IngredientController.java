@@ -36,4 +36,16 @@ public class IngredientController {
                                            @RequestBody List<Price> priceList) {
         return ResponseEntity.ok(ingredientService.save(id, stockMovementList, priceList));
     }
+
+    @PutMapping("/ingredient/{id}/prices")
+    public ResponseEntity<Ingredient> savePrices(@PathVariable Long id,
+                                                 @RequestBody List<Price> priceList) {
+        return ResponseEntity.ok(ingredientService.savePrices(id, priceList));
+    }
+
+    @PutMapping("/ingredient/{id}/stockMovement")
+    public ResponseEntity<Ingredient> saveStockMovement(@PathVariable Long id,
+                                                        @RequestBody List<StockMovement> stockMovements) {
+        return ResponseEntity.ok(ingredientService.saveStockMovement(id, stockMovements));
+    }
 }
