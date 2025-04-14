@@ -18,9 +18,12 @@ public class DishCrudImpl implements DishCrud {
 
     private final DbConnection db;
 
+    private final IngredientCrudImpl ingredienDao;
+
     @Autowired
-    public DishCrudImpl(DbConnection db) {
+    public DishCrudImpl(DbConnection db, IngredientCrudImpl ingredienDao) {
         this.db = db;
+        this.ingredienDao = ingredienDao;
     }
 
 
@@ -37,7 +40,13 @@ public class DishCrudImpl implements DishCrud {
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    ingredientList.add(new Ingredient(rs.getLong("ingredient_id"), rs.getString("ingredient_name"), rs.getDouble("quantity"), Unit.valueOf(rs.getString(("unit")))));
+                    ingredientList.add(new Ingredient(rs.getLong("ingredient_id"),
+                            rs.getString("ingredient_name"),
+                            rs.getDouble("quantity"),
+                            Unit.valueOf(rs.getString(("unit"))),
+                            ingredienDao.getPriceListOfIngredient(rs.getLong("ingredient_id")),
+                            ingredienDao.getStockMovementListOfIngredient(rs.getLong("ingredient_id"))
+                    ));
                 }
             }
             return ingredientList;

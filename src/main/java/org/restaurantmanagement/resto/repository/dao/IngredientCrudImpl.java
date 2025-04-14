@@ -21,7 +21,7 @@ public class IngredientCrudImpl implements IngredientCrud {
         this.db = db;
     }
 
-    private List<Price> getPriceListOfIngredient(Long id) {
+    public List<Price> getPriceListOfIngredient(Long id) {
         String sql = """
                 SELECT p.price_id, p.amount, p.dateTime FROM Price p 
                              WHERE p.ingredient_id = ?  
@@ -45,7 +45,7 @@ public class IngredientCrudImpl implements IngredientCrud {
         }
     }
 
-    private List<StockMovement> getStockMovementListOfIngredient(Long id) {
+    public List<StockMovement> getStockMovementListOfIngredient(Long id) {
         String sql = """
                 SELECT s.stock_movement_id, s.quantity, s.unit, s.stockMovementType, s.creationDateTime
                 FROM StockMovement s 
