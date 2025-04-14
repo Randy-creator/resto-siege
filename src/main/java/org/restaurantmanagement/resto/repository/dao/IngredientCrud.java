@@ -14,4 +14,10 @@ public interface IngredientCrud {
     public Ingredient createIngredient(Ingredient ingredient);
 
     public Ingredient save(Long id, List<StockMovement> stockMovementList, List<Price> priceList);
+
+    public Ingredient savePrices(Long id, List<Price> priceList);
+
+
+    public Ingredient saveStockMovements(Long id, List<StockMovement> stockMovementList);
 }
+

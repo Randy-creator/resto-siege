@@ -226,4 +226,68 @@ public class IngredientCrudImpl implements IngredientCrud {
         return ingredientToSave;
     }
 
+    @Override
+    public Ingredient savePrices(Long id, List<Price> priceList) {
+        Ingredient ingredient = getIngredientById(id);
+        ingredient.setPrices(priceList);
+
+        try (Connection connection = db.getConnection()) {
+            for (Price price : priceList) {
+                String sql = """
+                        INSERT INTO Price (price_id, ingredient_id, amount, dateTime)
+                        VALUES (?, ?, ?, ?)
+                        ON CONFLICT (price_id) DO UPDATE
+                        SET ingredient_id = EXCLUDED.ingredient_id,
+                            amount = EXCLUDED.amount,
+                            dateTime = EXCLUDED.dateTime
+                        """;
+
+                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                    ps.setLong(1, price.getId());
+                    ps.setLong(2, id);
+                    ps.setDouble(3, price.getAmount());
+                    ps.setTimestamp(4, Timestamp.valueOf(price.getDateTime()));
+                    ps.executeUpdate();
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return ingredient;
+    }
+
+    @Override
+    public Ingredient saveStockMovements(Long id, List<StockMovement> stockMovementList) {
+        Ingredient ingredient = getIngredientById(id);
+        ingredient.setStockMovements(stockMovementList);
+
+        try (Connection connection = db.getConnection()) {
+            for (StockMovement stockMove : stockMovementList) {
+                String sql = """
+                        INSERT INTO StockMovement (stock_movement_id, ingredient_id, quantity, unit, stockMovementType, creationDateTime)
+                        VALUES(?, ?, ?, ?, ?, ?)
+                        ON CONFLICT (stock_movement_id) DO UPDATE
+                        SET ingredient_id=EXCLUDED.ingredient_id,
+                            quantity=EXCLUDED.quantity, unit=EXCLUDED.unit, 
+                            stockMovementType=EXCLUDED.stockMovementType, 
+                            creationDateTime=EXCLUDED.creationDateTime
+                        """;
+
+                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                    ps.setLong(1, stockMove.getId());
+                    ps.setLong(2, ingredient.getId());
+                    ps.setDouble(3, stockMove.getQuantity());
+                    ps.setString(4, stockMove.getUnit().name());
+                    ps.setString(5, stockMove.getStockMovementType().name());
+                    ps.setTimestamp(6, Timestamp.valueOf(stockMove.getCreationDateTime()));
+                    ps.executeUpdate();
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return ingredient;
+    }
+
 }
