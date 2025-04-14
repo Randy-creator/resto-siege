@@ -81,11 +81,16 @@ public class Ingredient {
 
 
     public Double getAvailableQuantityAt(LocalDateTime datetime) {
+        if (stockMovements == null || stockMovements.isEmpty()) {
+            return 0.0;
+        }
+
         List<StockMovement> stockMovementsBeforeToday = stockMovements.stream()
                 .filter(stockMovement ->
                         stockMovement.getCreationDateTime().isBefore(datetime)
                                 || stockMovement.getCreationDateTime().equals(datetime))
                 .toList();
+
         double quantity = 0;
         for (StockMovement stockMovement : stockMovementsBeforeToday) {
             if (IN.equals(stockMovement.getStockMovementType())) {
@@ -96,4 +101,5 @@ public class Ingredient {
         }
         return quantity;
     }
+
 }
