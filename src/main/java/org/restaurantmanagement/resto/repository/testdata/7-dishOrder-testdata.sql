@@ -1,0 +1,2 @@
+INSERT INTO DishOrder VALUES
+(1, 1, 1, 3);
