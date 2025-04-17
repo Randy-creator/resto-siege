@@ -124,4 +124,34 @@ public class DishOrderCrupImpl implements DishOrderCrud {
         }
     }
 
+
+    public List<DishOrder> getAllDishOrders(int limit, int offset) {
+        List<DishOrder> dishOrders = new ArrayList<>();
+        String sql = "SELECT order_dish_id, dish_id, order_id, ordered_dish_quantity FROM DishOrder ORDER BY order_dish_id LIMIT ? OFFSET ?";
+
+        try (Connection connection = datasource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, limit);
+            statement.setInt(2, offset);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    long orderDishId = resultSet.getLong("order_dish_id");
+                    long dishId = resultSet.getLong("dish_id");
+                    int quantity = resultSet.getInt("ordered_dish_quantity");
+
+                    DishOrder dishOrder = new DishOrder(orderDishId, dishesDao.getDishById(dishId), quantity);
+                    dishOrder.setStatusList(statusDao.getStatusForDishOrder(orderDishId));
+
+                    dishOrders.add(dishOrder);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return dishOrders;
+    }
+
 }
