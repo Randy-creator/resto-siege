@@ -88,7 +88,7 @@ public class DishCrudImpl implements DishCrud {
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new Dish(rs.getLong("dish_id"), rs.getString("dish_name"), rs.getDouble("dish_price"));
+                    return new Dish(rs.getLong("dish_id"), rs.getString("dish_name"), rs.getDouble("dish_price"), getIngredientOfDish(id));
                 }
             }
         } catch (Exception e) {

@@ -24,6 +24,8 @@ public class Dish {
     }
 
     public Double getAvailableQuantity() {
+        if (ingredientList == null || ingredientList.isEmpty()) return 0.0;
+
         return this.ingredientList
                 .stream()
                 .mapToDouble(ingredient -> (Math.round(ingredient.getAvailableQuantityAt() / ingredient.getQuantity())))
