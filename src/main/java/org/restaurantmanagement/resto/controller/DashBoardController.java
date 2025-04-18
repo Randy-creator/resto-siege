@@ -15,15 +15,6 @@ public class DashBoardController {
     @Autowired
     private DishServiceImpl dishService;
 
-    @GetMapping("/bestSales ")
-    public ResponseEntity<Object> getBestSales(@RequestParam LocalDateTime start,
-                                               @RequestParam LocalDateTime end,
-                                               @RequestParam int size
-
-    ) {
-        throw new RuntimeException("not yet");
-    }
-
     @GetMapping("/{branchId}/dishes/{id}/processingTime")
     public ResponseEntity<Object> getProcessingTime(
             @PathVariable Long dishId,

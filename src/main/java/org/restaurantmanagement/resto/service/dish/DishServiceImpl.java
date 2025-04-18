@@ -7,6 +7,7 @@ import org.restaurantmanagement.resto.entity.Enum.StatusType;
 import org.restaurantmanagement.resto.entity.model.Dish;
 import org.restaurantmanagement.resto.entity.model.DishOrder;
 import org.restaurantmanagement.resto.entity.model.Status;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@Service
 public class DishServiceImpl implements DishService{
     private Map<Long, DishOrder> getDishOrdersByDishId(long dishId, LocalDateTime start, LocalDateTime end) {
         Map<Long, DishOrder> dishOrders = new HashMap<>();
