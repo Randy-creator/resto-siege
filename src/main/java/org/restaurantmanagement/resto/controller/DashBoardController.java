@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/branch")
 public class DashBoardController {
     @Autowired
     private DishServiceImpl dishService;
@@ -24,9 +23,9 @@ public class DashBoardController {
         throw new RuntimeException("not yet");
     }
 
-    @GetMapping("/{branchId}/dishes/{id}/processingTime")
+    @GetMapping("/dishes/{dishId}/processingTime")
     public ResponseEntity<Object> getProcessingTime(
-            @PathVariable Long dishId,
+            @PathVariable("dishId") long dishId,
             @RequestParam(defaultValue = "SECONDS", required = false) TimeUnit durationType,
             @RequestParam(defaultValue = "AVG", required = false) Mode mode,
             @RequestParam LocalDateTime start,

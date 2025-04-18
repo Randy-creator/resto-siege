@@ -2,25 +2,25 @@ package org.restaurantmanagement.resto.service.dish;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.restaurantmanagement.resto.entity.Enum.Mode;
 import org.restaurantmanagement.resto.entity.Enum.StatusType;
-import org.restaurantmanagement.resto.entity.model.Dish;
 import org.restaurantmanagement.resto.entity.model.DishOrder;
 import org.restaurantmanagement.resto.entity.model.Status;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@Service
 public class DishServiceImpl implements DishService{
     private Map<Long, DishOrder> getDishOrdersByDishId(long dishId, LocalDateTime start, LocalDateTime end) {
         Map<Long, DishOrder> dishOrders = new HashMap<>();
@@ -42,15 +42,18 @@ public class DishServiceImpl implements DishService{
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
             if (response.statusCode() == 200) {
                 ObjectMapper mapper = new ObjectMapper();
+                mapper.registerModule(new JavaTimeModule());
+                mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // Pour un meilleur format lisible
 
-                // Assuming your response is a JSON array of DishOrder
+                System.out.println(response.body());
+
                 dishOrders = mapper.readValue(
                         response.body(),
                         new TypeReference<Map<Long, DishOrder>>() {}
                 );
+
             } else {
                 System.err.println("Failed to fetch dish orders. HTTP " + response.statusCode());
             }

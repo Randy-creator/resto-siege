@@ -12,13 +12,15 @@ public class DbConnection {
 
     public Connection getConnection() {
         try {
-            connection = DriverManager.getConnection(System.getenv("url"), System.getenv("user"), System.getenv("password"));
+            connection =
+                    DriverManager.getConnection(System.getenv("url"),
+                            System.getenv("user"),
+                            System.getenv("password"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return connection;
     }
 
-//   "jdbc:postgresql://localhost:5432/restaurant"
 
 }
