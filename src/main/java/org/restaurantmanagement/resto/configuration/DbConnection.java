@@ -1,4 +1,4 @@
-package org.restaurantmanagement.resto.repository;
+package org.restaurantmanagement.resto.configuration;
 
 import org.springframework.context.annotation.Configuration;
 
