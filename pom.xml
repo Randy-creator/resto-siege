@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.restaurant-management</groupId>
-    <artifactId>resto</artifactId>
+    <artifactId>siege</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>resto</name>
-    <description>resto</description>
+    <name>siege</name>
+    <description>siege</description>
     <url/>
     <licenses>
         <license/>
