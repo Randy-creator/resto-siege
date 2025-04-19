@@ -58,7 +58,6 @@ public class DishServiceImpl implements DishService{
                     ObjectMapper mapper = new ObjectMapper();
                     mapper.registerModule(new JavaTimeModule());
                     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-                    System.out.println(response.body());
 
                     Map<Long, DishOrder> branchDishOrderMap = mapper.readValue(
                             response.body(),
@@ -124,5 +123,5 @@ public class DishServiceImpl implements DishService{
             case HOURS -> result / 3600;
             default -> result;
         };
-    };
+    }
 }
