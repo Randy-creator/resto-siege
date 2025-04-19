@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -18,10 +19,10 @@ public class SaleController {
         this.saleService = saleService;
     }
 
-    @PostMapping("/sales")
-    public ResponseEntity<Object> postSales(@RequestParam String startTime, @RequestParam String endTime) {
+    @PostMapping("/synchronisation")
+    public ResponseEntity<Object> synchronisation() {
         try {
-            saleService.getSales(startTime, endTime);
+            saleService.getSales(LocalDateTime.MIN.toString(), LocalDateTime.now().toString());
             return ResponseEntity.ok("Sales successfully fetched and migrated.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Migration failed: " + e.getMessage());
