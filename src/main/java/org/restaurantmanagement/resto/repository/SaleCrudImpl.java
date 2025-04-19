@@ -18,20 +18,27 @@ public class SaleCrudImpl implements SaleCrud {
     }
 
     @Override
-    public void saveAll(List<Sale> sales) {
-        String sql = "INSERT INTO sale (dish_name, sale_quantity, total_earned) VALUES (?, ?, ?)";
+    public void saveAll(List<Sale> sales, String branchName) {
+        String sql = """
+            INSERT INTO sale (branch_name, dish_name, sale_quantity, total_earned) 
+            VALUES (?, ?, ?, ?) 
+            ON CONFLICT (branch_name, dish_name) DO UPDATE SET 
+                sale_quantity = excluded.sale_quantity, 
+                total_earned = excluded.total_earned
+            """;
 
         try (Connection connection = db.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
             for (Sale sale : sales) {
-                ps.setString(1, sale.getDishName());
-                ps.setDouble(2, sale.getSaleQuantity());
-                ps.setDouble(3, sale.getTotalEarned());
+                ps.setString(1, branchName);
+                ps.setString(2, sale.getDishName());
+                ps.setDouble(3, sale.getSaleQuantity());
+                ps.setDouble(4, sale.getTotalEarned());
                 ps.addBatch();
             }
 
-            ps.executeBatch(); // Exécute tout d’un coup 🚀
+            ps.executeBatch();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
