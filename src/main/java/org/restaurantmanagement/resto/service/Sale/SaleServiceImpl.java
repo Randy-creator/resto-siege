@@ -32,13 +32,14 @@ public class SaleServiceImpl implements SaleService {
         List<Branch> branches = branchDao.getBranches();
         for (Branch branch : branches) {
             try {
-                String uri = branch.getBranch_url()
+                String uri = branch.getBranchUrl()
                         + "/sales?startTime=" + startTime
                         + "&endTime=" + endTime;
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(new URI(uri))
+                        .header(branch.getBranchName().toUpperCase()+"API-KEY", branch.getBranchApiKey())
                         .GET()
                         .build();
 
@@ -54,7 +55,7 @@ public class SaleServiceImpl implements SaleService {
                     if (sales.isEmpty()) {
                         logger.info("No sales found.");
                     } else {
-                        saleCrud.saveAll(sales, branch.getBranch_name());
+                        saleCrud.saveAll(sales, branch.getBranchName());
                         logger.info("Sales successfully persisted.");
                     }
                 } else {
