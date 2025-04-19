@@ -1,6 +1,6 @@
 package org.restaurantmanagement.resto.controller;
 
-import org.restaurantmanagement.resto.service.SaleService;
+import org.restaurantmanagement.resto.service.Sale.SaleServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SaleController {
-    private final SaleService saleService;
+    private final SaleServiceImpl saleService;
 
-    public SaleController(SaleService saleService) {
+    public SaleController(SaleServiceImpl saleService) {
         this.saleService = saleService;
     }
 
