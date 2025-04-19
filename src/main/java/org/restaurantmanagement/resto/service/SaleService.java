@@ -23,9 +23,9 @@ public class SaleService {
         this.saleCrud = saleCrud;
     }
 
-    public void getBestSales(String startTime, String endTime) {
+    public void getSales(String startTime, String endTime) {
         try {
-            String uri = "http://localhost:8080/sales/bestSales?top=3&startTime=" + startTime + "&endTime=" + endTime;
+            String uri = "http://localhost:"+ System.getenv("RESTO1_SERVER_PORT")+"/sales?startTime=" + startTime + "&endTime=" + endTime;
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -44,12 +44,6 @@ public class SaleService {
                 if (sales.isEmpty()) {
                     logger.info("No sales found.");
                 } else {
-                    for (Sale sale : sales) {
-                        logger.info("Dish: " + sale.getDishName() +
-                                " | Sold: " + sale.getSaleQuantity() +
-                                " | Earned: $" + sale.getTotalEarned());
-                    }
-
                     saleCrud.saveAll(sales);
                     logger.info("Sales successfully persisted.");
                 }

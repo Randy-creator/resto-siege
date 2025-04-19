@@ -15,9 +15,9 @@ public class SaleController {
     }
 
     @PostMapping("/sales")
-    public ResponseEntity<Object> postBestSales(@RequestParam String startTime, @RequestParam String endTime) {
+    public ResponseEntity<Object> postSales(@RequestParam String startTime, @RequestParam String endTime) {
         try {
-            saleService.getBestSales(startTime, endTime);
+            saleService.getSales(startTime, endTime);
             return ResponseEntity.ok("Sales successfully fetched and migrated.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Migration failed: " + e.getMessage());
