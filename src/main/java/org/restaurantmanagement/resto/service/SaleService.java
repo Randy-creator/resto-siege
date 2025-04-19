@@ -25,7 +25,10 @@ public class SaleService {
 
     public void getSales(String startTime, String endTime) {
         try {
-            String uri = "http://localhost:"+ System.getenv("RESTO1_SERVER_PORT")+"/sales?startTime=" + startTime + "&endTime=" + endTime;
+            String uri = "http://localhost:"
+                    + System.getenv("RESTO1_SERVER_PORT")
+                    + "/sales?startTime=" + startTime
+                    + "&endTime=" + endTime;
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -39,7 +42,8 @@ public class SaleService {
 
             if (responseStatus >= 200 && responseStatus < 300) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                List<Sale> sales = objectMapper.readValue(response.body(), new TypeReference<>() {});
+                List<Sale> sales = objectMapper.readValue(response.body(), new TypeReference<>() {
+                });
 
                 if (sales.isEmpty()) {
                     logger.info("No sales found.");

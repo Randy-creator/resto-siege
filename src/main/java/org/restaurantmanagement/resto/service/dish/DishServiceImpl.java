@@ -45,8 +45,7 @@ public class DishServiceImpl implements DishService{
             if (response.statusCode() == 200) {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.registerModule(new JavaTimeModule());
-                mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // Pour un meilleur format lisible
-
+                mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
                 System.out.println(response.body());
 
                 dishOrders = mapper.readValue(
