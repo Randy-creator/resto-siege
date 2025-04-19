@@ -10,18 +10,9 @@ import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-public class DashBoardController {
+public class DishController {
     @Autowired
     private DishServiceImpl dishService;
-
-    @GetMapping("/bestSales ")
-    public ResponseEntity<Object> getBestSales(@RequestParam LocalDateTime start,
-                                               @RequestParam LocalDateTime end,
-                                               @RequestParam int size
-
-    ) {
-        throw new RuntimeException("not yet");
-    }
 
     @GetMapping("/dishes/{dishId}/processingTime")
     public ResponseEntity<Object> getProcessingTime(
