@@ -68,4 +68,9 @@ public class SaleServiceImpl implements SaleService {
             }
         }
     }
+
+    @Override
+    public List<Sale> getBestSale(int top) {
+        return saleCrud.getBestSale(top);
+    }
 }
