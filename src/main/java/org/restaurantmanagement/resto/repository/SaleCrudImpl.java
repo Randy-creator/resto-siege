@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -20,12 +22,12 @@ public class SaleCrudImpl implements SaleCrud {
     @Override
     public void saveAll(List<Sale> sales, String branchName) {
         String sql = """
-            INSERT INTO sale (branch_name, dish_name, sale_quantity, total_earned) 
-            VALUES (?, ?, ?, ?) 
-            ON CONFLICT (branch_name, dish_name) DO UPDATE SET 
-                sale_quantity = excluded.sale_quantity, 
-                total_earned = excluded.total_earned
-            """;
+                INSERT INTO sale (branch_name, dish_name, sale_quantity, total_earned) 
+                VALUES (?, ?, ?, ?) 
+                ON CONFLICT (branch_name, dish_name) DO UPDATE SET 
+                    sale_quantity = excluded.sale_quantity, 
+                    total_earned = excluded.total_earned
+                """;
 
         try (Connection connection = db.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -45,4 +47,27 @@ public class SaleCrudImpl implements SaleCrud {
         }
     }
 
+    public List<Sale> getBestSale(int top) {
+        String sql = """
+                SELECT dish_name, sale_quantity, total_earned FROM Sale ORDER BY total_earned DESC 
+                LIMIT ?                
+                """;
+
+        List<Sale> saleList = new ArrayList<>();
+        try (Connection connection = db.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, top);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    saleList.add(new Sale(
+                            rs.getString("dish_name"),
+                            rs.getDouble("sale_quantity"),
+                            rs.getDouble("total_earned")
+                    ));
+                }
+            }
+            return saleList;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
