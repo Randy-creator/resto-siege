@@ -19,12 +19,13 @@ public class BranchDaoImpl implements BranchDao{
 
     @Override
     public List<Branch> getBranches() {
-        String sql = "SELECT branch_id, branch_name, branch_url, branch_api_key FROM branches;";
+        String sql = "SELECT branch_id, branch_name, branch_url, branch_api_key FROM branches";
         List<Branch> branches = new ArrayList<>();
         try (Connection connection = datasource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ){
+            ResultSet resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()){
                 branches.add(new Branch(
                         resultSet.getLong("branch_id"),
@@ -33,6 +34,7 @@ public class BranchDaoImpl implements BranchDao{
                         resultSet.getString("branch_api_key")
                 ));
             }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
