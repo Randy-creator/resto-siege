@@ -1,4 +1,4 @@
-package org.restaurantmanagement.resto.service;
+package org.restaurantmanagement.resto.service.Sale;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,15 +14,16 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service
-public class SaleService {
+public class SaleServiceImpl implements SaleService{
 
-    private static final Logger logger = Logger.getLogger(SaleService.class.getName());
+    private static final Logger logger = Logger.getLogger(SaleServiceImpl.class.getName());
     private final SaleCrudImpl saleCrud;
 
-    public SaleService(SaleCrudImpl saleCrud) {
+    public SaleServiceImpl(SaleCrudImpl saleCrud) {
         this.saleCrud = saleCrud;
     }
 
+    @Override
     public void getSales(String startTime, String endTime) {
         try {
             String uri = "http://localhost:"
